@@ -1,0 +1,102 @@
+import numpy as np
+from matplotlib import style
+import pandas as pd
+style.use('ggplot')
+import matplotlib.pyplot as plt
+
+
+np.random.seed(1)
+theta = np.random.uniform(0,2*np.pi, 150)
+radius_1 = np.random.uniform(1 , 2, 150) ** 0.5
+radius_2 = np.random.uniform(4 ,5, 150) ** 0.5
+
+x_1_first = radius_1 * np.cos(theta)
+x_2_first = radius_1 * np.sin(theta)
+x_3_second = radius_2 * np.cos(theta)
+x_4_second = radius_2 * np.sin(theta)
+
+z_first = np.random.uniform(4, 5)
+z_second = np.random.uniform(1, 2)
+# z_first = x_1_first + x_2_first
+# z_second = x_3_second + x_4_second
+
+
+
+def NextSpace(x):
+    x_new = x * x
+    return x_new
+
+x_1_first_new = NextSpace(x_1_first)
+x_2_first_new = NextSpace(x_2_first)
+x_3_second_new = NextSpace(x_3_second)
+x_4_second_new = NextSpace(x_4_second)
+
+# fig = plt.figure(figsize=(10, 7))
+ax = plt.axes(projection="3d")
+# plt.scatter(x_1_first, x_2_first, z_first)
+# plt.scatter(x_3_second, x_4_second, z_second)
+
+
+# Creating plot
+ax.scatter3D(x_1_first, x_2_first, z_first, color="red")
+ax.scatter3D(x_3_second, x_4_second, z_second, color="green")
+
+fig = plt.figure()
+ax = fig.add_subplot(111,projection='3d')
+xx, yy = np.meshgrid(np.random.uniform(4, 5, 150), np.random.uniform(4, 5, 150))
+zz = (xx + yy)/5
+# plot the plane
+ax.plot_surface(xx, yy, zz, alpha=0.05)
+ax.set_xlim(4, 5)
+ax.set_ylim(4,5)
+ax.set_zlim(0,4)
+# plt.contourf(x_1_first, x_2_first, z_first)
+# Xmh, Ymh, Zmh = grid(x_1_first, x_2_first, z_first)
+# ax.plot_surface(x_1_first, x_2_first, z_first)
+# plt.plot([3.5, 0], [0.0, 3.5], 'r')
+
+# kernel_13 = np.sum(x_1_first.reshape(-1, 1) @ x_3_second.reshape(1, -1))
+# kernel_14 = np.sum(x_1_first.reshape(-1, 1) @ x_4_second.reshape(1, -1))
+# kernel_24 = np.sum( x_2_first.reshape(-1, 1) @ x_4_second.reshape(1, -1))
+# kernel_23 = np.sum(x_2_first.reshape(-1, 1) @ x_3_second.reshape(1, -1))
+# plt.plot(kernel_13,kernel_14)
+# plt.plot(kernel_23,kernel_24)
+
+x_1 = np.vstack((x_1_first, x_2_first)).reshape(150, 2)
+y_1 = np.ones((150, 1))
+x_2 = np.vstack((x_3_second, x_4_second)).reshape(150, 2)
+y_2 = -1* np.ones((150, 1))
+X = np.vstack((x_1, x_2))
+Y = np.vstack((y_1, y_2))
+print("shape of the features plus bias:\t", X.shape, "\nshape of the each data classes:\t", Y.shape)
+
+def train(X, Y, learning_rate, C_Parameter, m):
+    theta = np.zeros((X.shape[1]))
+    print(X.shape, np.dot(X[6], theta), Y.shape)
+    while np.sum(Y - np.dot(X, theta)) < C_Parameter:
+     for i in range(X.shape[0]):
+        if (Y[i] * np.dot(X[i], theta)) < 1:
+            theta -= learning_rate * (2 * (theta * (1/m)) - (X[i] * Y[i]))
+        else:
+            theta -= learning_rate * (2 * (theta * (1 / m)))
+    return theta
+
+def predict(X, theta):
+    Class_test = np.dot(X, theta)
+    return print("Predict:\t", Class_test)
+
+Theta = train(X, Y, 0.01, 0.000001, 2000)
+print("theta:\t", Theta)
+a = predict([2.7, 3.01], Theta)
+print("X_Test & bias:\t",np.hstack((1, [2.7, 3.01])))
+x2=[-Theta[0]*6.5,Theta[1],-Theta[1],Theta[0]]
+x3=[-Theta[0]*6.5,Theta[1],Theta[1],-Theta[0]]
+x2x3 =np.array([x2,x3])
+X_x,Y_y,U,V = zip(*x2x3)
+ax = plt.gca()
+# ax.quiver(X_x,Y_y,U,V,scale=1, color='blue')
+
+# xfigure = X
+# yfigure = np.dot(X, Theta)
+# plt.plot(xfigure, yfigure, 'm')
+plt.show()
