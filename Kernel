@@ -33,7 +33,7 @@ x_4_second_new = NextSpace(x_4_second)
 
 # fig = plt.figure(figsize=(10, 7))
 ax = plt.axes(projection="3d")
-# plt.scatter(x_1_first, x_2_first, z_first)
+# plt.scatter(x_1_first, x_2_first, z_first) 
 # plt.scatter(x_3_second, x_4_second, z_second)
 
 
